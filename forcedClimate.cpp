@@ -64,7 +64,7 @@ void ForcedClimate::applyOversamplingControls(){
 /// stored in the temperature, pressure and humidity arrays for
 /// later use in compensation.
 void ForcedClimate::readCalibrationData(){
-    bus.requestFrom(address, 26);
+    bus.requestFrom(address, (uint8_t)26);
     for (int i=1; i<=3; i++) temperature[i] = read16();       // Temperature
     for (int i=1; i<=9; i++) pressure[i] = read16();       // Pressure
     bus.read();                                     // Skip 0xA0
@@ -72,7 +72,7 @@ void ForcedClimate::readCalibrationData(){
     bus.beginTransmission(address);
     bus.write((uint8_t)registers::SCND_CALIB);
     bus.endTransmission();
-    bus.requestFrom(address, 7);
+    bus.requestFrom(address, (uint8_t)7);
     humidity[2] = read16();
     humidity[3] = (uint8_t)bus.read();
     uint8_t e4 = bus.read(); uint8_t e5 = bus.read();
@@ -93,7 +93,7 @@ int32_t ForcedClimate::getTemperature(){
     bus.write(0b00100101);
 	bus.write((uint8_t)registers::TEMP_MSB);
 	bus.endTransmission();
-	bus.requestFrom(address, (uint32_t)3);
+	bus.requestFrom(address, (uint8_t)3);
 	int32_t adc = read32();
 	int32_t var1 = ((((adc>>3) - ((int32_t)((uint16_t)temperature[1])<<1))) * ((int32_t)temperature[2])) >> 11;
 	int32_t var2 = ((((adc>>4) - ((int32_t)((uint16_t)temperature[1]))) * ((adc>>4) - ((int32_t)((uint16_t)temperature[1])))) >> 12);
@@ -113,7 +113,7 @@ int32_t ForcedClimate::getPressure(){
     bus.write(0b00100101);
 	bus.write((uint8_t)registers::PRESS_MSB);
 	bus.endTransmission();
-	bus.requestFrom(address, (uint32_t)3);
+	bus.requestFrom(address, (uint8_t)3);
 
 	int32_t adc = read32();
 	int32_t var1 = (((int32_t)BME280t_fine)>>1) - (int32_t)64000;
@@ -150,7 +150,7 @@ int32_t ForcedClimate::getHumidity(){
     bus.write(0b00100101);
 	bus.write((uint8_t)registers::HUM_MSB);
 	bus.endTransmission();
-	bus.requestFrom(address, (uint32_t)2);
+	bus.requestFrom(address, (uint8_t)2);
 	uint8_t hi = bus.read(); uint8_t lo = bus.read();
 	int32_t adc = (uint16_t)(hi<<8 | lo);
 	int32_t var1; 
