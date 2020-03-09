@@ -52,7 +52,7 @@ void ForcedClimate::applyOversamplingControls(){
     bus.write((uint8_t)registers::CTRL_HUM);
     bus.write(0b00000001);
     bus.write((uint8_t)registers::CTRL_MEAS);
-    bus.write(0b00100111);
+    bus.write(0b00100101);
     bus.write((uint8_t)registers::FIRST_CALIB);
     bus.endTransmission();
 }
