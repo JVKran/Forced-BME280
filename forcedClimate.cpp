@@ -89,6 +89,8 @@ void ForcedClimate::readCalibrationData(){
 /// on page 50 of the BME280 Datasheet.
 int32_t ForcedClimate::getTemperature(){
 	bus.beginTransmission(address);
+    bus.write((uint8_t)registers::CTRL_MEAS);
+    bus.write(0b00100101);
 	bus.write((uint8_t)registers::TEMP_MSB);
 	bus.endTransmission();
 	bus.requestFrom(address, (uint32_t)3);
@@ -107,6 +109,8 @@ int32_t ForcedClimate::getTemperature(){
 /// on page 50 of the BME280 Datasheet.
 int32_t ForcedClimate::getPressure(){
 	bus.beginTransmission(address);
+    bus.write((uint8_t)registers::CTRL_MEAS);
+    bus.write(0b00100101);
 	bus.write((uint8_t)registers::PRESS_MSB);
 	bus.endTransmission();
 	bus.requestFrom(address, (uint32_t)3);
@@ -142,6 +146,8 @@ int32_t ForcedClimate::getPressure(){
 /// on page 50 of the BME280 Datasheet.
 int32_t ForcedClimate::getHumidity(){
 	bus.beginTransmission(address);
+    bus.write((uint8_t)registers::CTRL_MEAS);
+    bus.write(0b00100101);
 	bus.write((uint8_t)registers::HUM_MSB);
 	bus.endTransmission();
 	bus.requestFrom(address, (uint32_t)2);
