@@ -4,6 +4,12 @@ That's the main goal of this entire library.
 
 The name of this respository stands for the mode in which the BME280 is used. In forced mode the chip sleeps and gets waked up if data is requested. During measurements it peeks up to normal current consumption. However, when not in use, the chip only uses 0.25uA! Great for battery powered ATtiny's ;).
 
+## Advantages of this library
+- Ultra low power. In sleep mode the BME280 only uses 0.25uA!
+- Ultra small footprint; this library was made with eficiency and memory usage in mind.
+- Easy to use interface and functions. Despite the small size of this library, functions are still very intuitive.
+
+
 ## Example
 There has been given an example that can be obtained from GitHub or from within the Arduino IDE in Examples->Forced-BME280->Test.
 ```c++
