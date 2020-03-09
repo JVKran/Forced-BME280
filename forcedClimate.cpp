@@ -1,5 +1,9 @@
 /// @file
 
+/* Forced-BME280 Library
+   Jochem van Kranenburg - jochemvk.duckdns.org - 9 March 2020
+*/
+
 #include "forcedClimate.hpp"
 
 /// \brief

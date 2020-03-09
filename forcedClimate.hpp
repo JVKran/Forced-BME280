@@ -1,3 +1,8 @@
+
+/* Forced-BME280 Library
+   Jochem van Kranenburg - jochemvk.duckdns.org - 9 March 2020
+*/
+
 #ifndef __FORCED_CLIMATE_HPP
 #define __FORCED_CLIMATE_HPP
 
