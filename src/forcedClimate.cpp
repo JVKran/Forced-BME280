@@ -44,11 +44,23 @@ ForcedClimate::ForcedClimate(TwoWire & bus, const uint8_t address, const bool au
 	}
 }
 
+/// \brief
+/// Begin
+/// \details
+/// This applies the set Oversampling Controls and reads the calibration
+/// data from the register. This function has been implementted to comply
+/// with the Arduino 1.5 Format; it's also called from the constructor (as it should be).
 void ForcedClimate::begin(){
 	applyOversamplingControls();
 	readCalibrationData();
 }
 
+/// \brief
+/// Take forced measurement
+/// \details
+/// This function takes a forced measurement. That is, the BME280 is woken up to take
+/// a measurement after which it goes back to sleep. During this sleep, it consumes
+/// 0.25uA!
 void ForcedClimate::takeForcedMeasurement(){
 	bus.beginTransmission(address);
 	bus.write((uint8_t)registers::CTRL_MEAS);
@@ -57,7 +69,7 @@ void ForcedClimate::takeForcedMeasurement(){
 }
 
 /// \brief
-/// Get Pressure
+/// Apply oversampling controls
 /// \details
 /// This function sets the sampling controls to values that are
 /// suitable for all kinds of applications.
@@ -81,8 +93,8 @@ void ForcedClimate::readCalibrationData(){
     bus.requestFrom(address, (uint8_t)26);
     for (int i=1; i<=3; i++) temperature[i] = readTwoRegisters();       	// Temperature
     for (int i=1; i<=9; i++) pressure[i] = readTwoRegisters();       		// Pressure
-    bus.read();                                     			// Skip 0xA0
-    humidity[1] = (uint8_t)bus.read();                     		// Humidity
+    bus.read();                                     						// Skip 0xA0
+    humidity[1] = (uint8_t)bus.read();                     					// Humidity
     bus.beginTransmission(address);
     bus.write((uint8_t)registers::SCND_CALIB);
     bus.endTransmission();
