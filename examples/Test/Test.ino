@@ -3,7 +3,7 @@
    Jochem van Kranenburg - jochemvk.duckdns.org - 9 March 2020
 */
 
-#include "forcedClimate.hpp"
+#include <forcedClimate.hpp>
 
 // Pass a Wire object for I2C communication and the address of the BME280.
 ForcedClimate climateSensor = ForcedClimate(Wire, 0x76);
