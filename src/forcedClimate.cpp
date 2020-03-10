@@ -4,7 +4,7 @@
    Jochem van Kranenburg - jochemvk.duckdns.org - 9 March 2020
 */
 
-#include "forcedClimate.hpp"
+#include "forcedClimate.h"
 
 /// \brief
 /// Read 16 bits
