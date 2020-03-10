@@ -6,12 +6,12 @@ The name of this respository stands for the mode in which the BME280 is used. In
 
 ## Advantages of this library
 - Ultra low power. In sleep mode the BME280 only uses 0.25uA!
-- Ultra small footprint; this library was made with eficiency and memory usage in mind.
+- Ultra small footprint; this library was made with efficiency and memory usage in mind.
 - Easy to use interface and functions. Despite the small size of this library, functions are still very intuitive.
 
 
 ## Example
-There has been given an example that can be obtained from GitHub or from within the Arduino IDE in Examples->Forced-BME280->Test.
+There has been given an example that can be obtained from below or from within the Arduino IDE in Examples->Forced-BME280->Test.
 ```c++
 #include <forcedClimate.hpp>
 
@@ -23,6 +23,7 @@ void setup(){
 }
 
 void loop(){
+	climateSensor.takeForcedMeasurement();
 	Serial.print("Temperature: ");
 	Serial.print(climateSensor.getTemperature());
 	Serial.print(", Humidity: ");
@@ -33,6 +34,12 @@ void loop(){
 	delay(1000);
 }
 ```
+
+## Functions
+- takeForcedMeasurement() This function takes a forced measurement which means getTemperature(), getHumidity() and getPressure() use the updated values. Useful in case all functions are all called at the same time.
+- getTemperature(const bool performMeasurement) This function can be used to retrieve the temperature. The parameter defaults to false which means takeForcedMeasurement() should be called first to make sure updated values are used. If the passed parameter is equal to true, a forced measurement is taken; useful in case only the getTemperature() function is called.
+- getHumidity(const bool performMeasurement) This function can be used to retrieve the humidity. The parameter defaults to false which means takeForcedMeasurement() should be called first to make sure updated values are used. If the passed parameter is equal to true, a forced measurement is taken; useful in case only the getHumidity() function is called.
+- getPressure(const bool performMeasurement) This function can be used to retrieve the pressure. The parameter defaults to false which means takeForcedMeasurement() should be called first to make sure updated values are used. If the passed parameter is equal to true, a forced measurement is taken; useful in case only the getPressure() function is called.
 
 
 ## Installation

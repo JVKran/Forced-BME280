@@ -1,0 +1,14 @@
+# Syntax Coloring Map For Forced-BME280 Library
+
+
+# Methods and Functions (KEYWORD2)
+begin	KEYWORD2
+takeForcedMeasurement	KEYWORD2
+getTemperature	KEYWORD2
+getHumidity	KEYWORD2
+getPressure	KEYWORD2
+
+
+# Instances (KEYWORD2)
+
+# Constants (LITERAL1)

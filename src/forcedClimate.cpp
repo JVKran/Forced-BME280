@@ -10,7 +10,7 @@
 /// Read 16 bits
 /// \details
 /// This function reads 16 bits from the I2C bus.
-int16_t ForcedClimate::read16 () {
+int16_t ForcedClimate::readTwoRegisters () {
     uint8_t lo = bus.read(); 
     uint8_t hi = bus.read();
     return hi << 8 | lo;
@@ -20,7 +20,7 @@ int16_t ForcedClimate::read16 () {
 /// Read 32 bits
 /// \details
 /// This function reads 32 bits from the I2C bus.
-int32_t ForcedClimate::read32 () {
+int32_t ForcedClimate::readFourRegisters () {
     uint8_t msb = bus.read(); 
     uint8_t lsb = bus.read(); 
     uint8_t xlsb = bus.read();
@@ -32,14 +32,28 @@ int32_t ForcedClimate::read32 () {
 /// \details
 /// This creates a ForcedClimate object from the mandatory TwoWire-bus
 /// and the address of the chip to communicate with.
-ForcedClimate::ForcedClimate(TwoWire & bus, const uint8_t address):
+ForcedClimate::ForcedClimate(TwoWire & bus, const uint8_t address, const bool autoBegin):
 	bus(bus),
 	address(address)
 {
     Wire.begin();
-	delay(2);
-    applyOversamplingControls();
-    readCalibrationData();
+    if(autoBegin){
+		delay(2);
+	    applyOversamplingControls();
+	    readCalibrationData();
+	}
+}
+
+void ForcedClimate::begin(){
+	applyOversamplingControls();
+	readCalibrationData();
+}
+
+void ForcedClimate::takeForcedMeasurement(){
+	bus.beginTransmission(address);
+	bus.write((uint8_t)registers::CTRL_MEAS);
+    bus.write(0b00100101);
+    bus.endTransmission();
 }
 
 /// \brief
@@ -52,7 +66,7 @@ void ForcedClimate::applyOversamplingControls(){
     bus.write((uint8_t)registers::CTRL_HUM);
     bus.write(0b00000001);
     bus.write((uint8_t)registers::CTRL_MEAS);
-    bus.write(0b00100101);
+    bus.write(0b00100101);							// Last two bits are 01 for forced, 11 for normal and 00 for sleep mode
     bus.write((uint8_t)registers::FIRST_CALIB);
     bus.endTransmission();
 }
@@ -65,15 +79,15 @@ void ForcedClimate::applyOversamplingControls(){
 /// later use in compensation.
 void ForcedClimate::readCalibrationData(){
     bus.requestFrom(address, (uint8_t)26);
-    for (int i=1; i<=3; i++) temperature[i] = read16();       // Temperature
-    for (int i=1; i<=9; i++) pressure[i] = read16();       // Pressure
-    bus.read();                                     // Skip 0xA0
-    humidity[1] = (uint8_t)bus.read();                     // Humidity
+    for (int i=1; i<=3; i++) temperature[i] = readTwoRegisters();       	// Temperature
+    for (int i=1; i<=9; i++) pressure[i] = readTwoRegisters();       		// Pressure
+    bus.read();                                     			// Skip 0xA0
+    humidity[1] = (uint8_t)bus.read();                     		// Humidity
     bus.beginTransmission(address);
     bus.write((uint8_t)registers::SCND_CALIB);
     bus.endTransmission();
     bus.requestFrom(address, (uint8_t)7);
-    humidity[2] = read16();
+    humidity[2] = readTwoRegisters();
     humidity[3] = (uint8_t)bus.read();
     uint8_t e4 = bus.read(); uint8_t e5 = bus.read();
     humidity[4] = ((int16_t)((e4 << 4) + (e5 & 0x0F)));
@@ -87,14 +101,16 @@ void ForcedClimate::readCalibrationData(){
 /// \details
 /// This function retrieves the compensated temperature as described
 /// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getTemperature(){
+int32_t ForcedClimate::getTemperature(const bool performMeasurement){
 	bus.beginTransmission(address);
-    bus.write((uint8_t)registers::CTRL_MEAS);
-    bus.write(0b00100101);
+	if(performMeasurement){
+    	bus.write((uint8_t)registers::CTRL_MEAS);
+    	bus.write(0b00100101);
+	}
 	bus.write((uint8_t)registers::TEMP_MSB);
 	bus.endTransmission();
 	bus.requestFrom(address, (uint8_t)3);
-	int32_t adc = read32();
+	int32_t adc = readFourRegisters();
 	int32_t var1 = ((((adc>>3) - ((int32_t)((uint16_t)temperature[1])<<1))) * ((int32_t)temperature[2])) >> 11;
 	int32_t var2 = ((((adc>>4) - ((int32_t)((uint16_t)temperature[1]))) * ((adc>>4) - ((int32_t)((uint16_t)temperature[1])))) >> 12);
 	var2 = (var2 * ((int32_t)temperature[3])) >> 14;
@@ -107,15 +123,17 @@ int32_t ForcedClimate::getTemperature(){
 /// \details
 /// This function retrieves the compensated pressure as described
 /// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getPressure(){
+int32_t ForcedClimate::getPressure(const bool performMeasurement){
 	bus.beginTransmission(address);
-    bus.write((uint8_t)registers::CTRL_MEAS);
-    bus.write(0b00100101);
+	if(performMeasurement){
+    	bus.write((uint8_t)registers::CTRL_MEAS);
+    	bus.write(0b00100101);
+	}
 	bus.write((uint8_t)registers::PRESS_MSB);
 	bus.endTransmission();
 	bus.requestFrom(address, (uint8_t)3);
 
-	int32_t adc = read32();
+	int32_t adc = readFourRegisters();
 	int32_t var1 = (((int32_t)BME280t_fine)>>1) - (int32_t)64000;
 	int32_t var2 = (((var1>>2) * (var1>>2)) >> 11 ) * ((int32_t)pressure[6]);
 	var2 = var2 + ((var1*((int32_t)pressure[5]))<<1);
@@ -144,10 +162,12 @@ int32_t ForcedClimate::getPressure(){
 /// \details
 /// This function retrieves the compensated humidity as described
 /// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getHumidity(){
+int32_t ForcedClimate::getHumidity(const bool performMeasurement){
 	bus.beginTransmission(address);
-    bus.write((uint8_t)registers::CTRL_MEAS);
-    bus.write(0b00100101);
+	if(performMeasurement){
+    	bus.write((uint8_t)registers::CTRL_MEAS);
+    	bus.write(0b00100101);
+	}
 	bus.write((uint8_t)registers::HUM_MSB);
 	bus.endTransmission();
 	bus.requestFrom(address, (uint8_t)2);
