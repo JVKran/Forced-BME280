@@ -3,6 +3,7 @@
    Jochem van Kranenburg - jochemvk.duckdns.org - 9 March 2020
 */
 
+// #define FORCED_CLIMATE_WIRE			// Uncomment this macro in 'Documents/Arduino/Libraries/Forced-BME280/src/forcedClimate.h' to use Wire.h instead of TinyWireM.h
 #include <forcedClimate.h>
 
 // Pass a Wire object for I2C communication and the address of the BME280.

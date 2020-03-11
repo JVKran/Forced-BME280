@@ -6,13 +6,24 @@
 #ifndef __FORCED_CLIMATE_HPP
 #define __FORCED_CLIMATE_HPP
 
+// #define FORCED_CLIMATE_WIRE Uncomment this macro to use Wire.h instead of TinyWireM.h
+
 #include <stdint.h>
 #include <Arduino.h>
-#include <Wire.h>
+
+#ifdef FORCED_CLIMATE_WIRE
+#include <Wire.h> 
+#else
+#include <TinyWireM.h>
+#endif 
 
 class ForcedClimate {
 	private:
-		TwoWire & bus;
+		#ifndef FORCED_CLIMATE_WIRE
+		USI_TWI & bus;
+		#else
+		TwoWire & bus;	
+		#endif
 		uint8_t address;
 
 		int16_t temperature[4];
@@ -38,7 +49,11 @@ class ForcedClimate {
 		};
 
 	public:
-		ForcedClimate(TwoWire & bus, const uint8_t address = 0x76, const bool autoBegin = true);
+		#ifndef FORCED_CLIMATE_WIRE
+		ForcedClimate(USI_TWI & bus, const uint8_t address = 0x76, const bool autoBegin = true);
+		#else
+		ForcedClimate(TwoWire & bus, const uint8_t address = 0x76, const bool autoBegin = true);	
+		#endif
 
 		void begin();
 		void takeForcedMeasurement();
