@@ -113,7 +113,7 @@ void ForcedClimate::readCalibrationData(){
 }
 
 /// \brief
-/// Get Temperature
+/// Get Temperature Celcius
 /// \details
 /// This function retrieves the compensated temperature as described
 /// on page 50 of the BME280 Datasheet.
@@ -135,11 +135,11 @@ int32_t ForcedClimate::getTemperatureCelcius(const bool performMeasurement){
 }
 
 /// \brief
-/// Get Temperature
+/// Get Temperature Fahrenheit
 /// \details
 /// This function retrieves the compensated temperature as described
 /// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getTemperatureFahrenheit(const bool performMeasurement = false){
+int32_t ForcedClimate::getTemperatureFahrenheit(const bool performMeasurement){
     return int32_t(float(getTemperatureCelcius() * 1.8) + 32);
 }
 
