@@ -58,9 +58,10 @@ class ForcedClimate {
 		void begin();
 		void takeForcedMeasurement();
 
-		int32_t getTemperature(const bool performMeasurement = false);
+		int32_t getTemperatureCelcius(const bool performMeasurement = false);
+		int32_t getTemperatureFahrenheit(const bool performMeasurement = false);
 		int32_t getPressure(const bool performMeasurement = false);
-		int32_t getHumidity(const bool performMeasurement = false);
+		int32_t getRelativeHumidity(const bool performMeasurement = false);
 
 };
 
