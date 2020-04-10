@@ -19,16 +19,16 @@ void loop(){
 	// getHumidity(true) or getPressure(true) to perform a forced measurement.
 	
 	Serial.print("Temperature: ");
-	Serial.print(climateSensor.getTemperature());
+	Serial.print(climateSensor.getTemperatureCelcius());
 	Serial.print(", Humidity: ");
-	Serial.print(climateSensor.getHumidity());
+	Serial.print(climateSensor.getRelativeHumidity());
 	Serial.print(" and Pressure: ");
 	Serial.print(climateSensor.getPressure());
 	Serial.println();
 	delay(1000);
 	Serial.print("Only temperature: ");
 	// Perform measurement integrated getTemperature(); useful for when only one value has to be used.
-	Serial.print(climateSensor.getTemperature(true));
+	Serial.print(climateSensor.getTemperatureCelcius(true));
 	Serial.println();
 	delay(5000);
 }

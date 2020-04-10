@@ -26,9 +26,9 @@ void setup(){
 void loop(){
 	climateSensor.takeForcedMeasurement();
 	Serial.print("Temperature: ");
-	Serial.print(climateSensor.getTemperature());
+	Serial.print(climateSensor.getTemperatureCelcius());
 	Serial.print(", Humidity: ");
-	Serial.print(climateSensor.getHumidity());
+	Serial.print(climateSensor.getRelativeHumidity());
 	Serial.print(" and Pressure: ");
 	Serial.print(climateSensor.getPressure());
 	Serial.println();
