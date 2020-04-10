@@ -52,4 +52,8 @@ This function can be used to retrieve the pressure. The parameter defaults to fa
 
 
 ## Installation
+#### Download
 Press the green _clone or download_ button in the upper-right and download as _.ZIP_. Then go to the Arduino IDE and go to _Sketch_>Use Library->Add .ZIP Library_ and select the just downloaded zip file.
+
+#### Library Manager
+Open up the Library Manager in the Arduino IDE and search for *Forced-BME280*. Select the desired version; higher means more features ;).
