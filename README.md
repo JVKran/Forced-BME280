@@ -36,6 +36,8 @@ void loop(){
 }
 ```
 
+> When using this library with anything other than an ATtiny, one has to comment out the macro in *Documents/Arduino/Libraries/Forced-BME280/src/forcedClimate.h*. This has to be done to make this library both convenient and memory friendly.
+
 ## Functions
 - takeForcedMeasurement() This function takes a forced measurement which means getTemperature(), getHumidity() and getPressure() use the updated values. Useful in case all functions are all called at the same time.
 - getTemperature(const bool performMeasurement) This function can be used to retrieve the temperature. The parameter defaults to false which means takeForcedMeasurement() should be called first to make sure updated values are used. If the passed parameter is equal to true, a forced measurement is taken; useful in case only the getTemperature() function is called.
