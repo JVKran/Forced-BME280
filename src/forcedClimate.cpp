@@ -109,7 +109,7 @@ void ForcedClimate::readCalibrationData(){
     humidity[4] = ((int16_t)((e4 << 4) + (e5 & 0x0F)));
     humidity[5] = ((int16_t)((bus.read() << 4) + ((e5 >> 4) & 0x0F)));
     humidity[6] = ((int8_t)bus.read());
-    getTemperature();
+    getTemperatureCelcius();
 }
 
 /// \brief
