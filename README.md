@@ -38,7 +38,7 @@ void loop(){
 }
 ```
 
-> When using this library with anything other than an ATtiny, one has to comment out the macro in */Documents/Arduino/Libraries/Forced-BME280/src/forcedClimate.h*. This has to be done to make this library both convenient and memory friendly.
+> When using this library with an ATtiny, one has to comment the macro in */Documents/Arduino/Libraries/Forced-BME280/src/forcedClimate.h*. This has to be done to make this library both convenient and memory friendly.
 
 ## Functions
 #### takeForcedMeasurement() 
