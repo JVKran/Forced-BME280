@@ -6,9 +6,8 @@
 #ifndef __FORCED_CLIMATE_HPP
 #define __FORCED_CLIMATE_HPP
 
-// #define FORCED_CLIMATE_WIRE Uncomment this macro to use Wire.h instead of TinyWireM.h
+// #define FORCED_CLIMATE_WIRE // Uncomment this macro to use Wire.h instead of TinyWireM.h
 
-#include <stdint.h>
 #include <Arduino.h>
 
 #ifdef FORCED_CLIMATE_WIRE
@@ -50,9 +49,9 @@ class ForcedClimate {
 
 	public:
 		#ifndef FORCED_CLIMATE_WIRE
-		ForcedClimate(USI_TWI & bus, const uint8_t address = 0x76, const bool autoBegin = true);
+		ForcedClimate(USI_TWI & bus, const uint8_t address = 0x76, const bool autoBegin = false);
 		#else
-		ForcedClimate(TwoWire & bus, const uint8_t address = 0x76, const bool autoBegin = true);	
+		ForcedClimate(TwoWire & bus, const uint8_t address = 0x76, const bool autoBegin = false);	
 		#endif
 
 		void begin();
