@@ -6,7 +6,7 @@
 #ifndef __FORCED_CLIMATE_HPP
 #define __FORCED_CLIMATE_HPP
 
-// #define FORCED_CLIMATE_WIRE // Uncomment this macro to use Wire.h instead of TinyWireM.h
+#define FORCED_CLIMATE_WIRE // Comment this macro to use TinyWireM.h instead of Wire.h 
 
 #include <Arduino.h>
 

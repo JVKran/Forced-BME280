@@ -21,6 +21,8 @@ ForcedClimate climateSensor = ForcedClimate(Wire, 0x76);
 
 void setup(){
 	Serial.begin(9600);
+	Wire.begin();
+	climateSensor.begin();
 }
 
 void loop(){
