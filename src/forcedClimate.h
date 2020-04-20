@@ -6,19 +6,21 @@
 #ifndef __FORCED_CLIMATE_HPP
 #define __FORCED_CLIMATE_HPP
 
-#define FORCED_CLIMATE_WIRE // Comment this macro to use TinyWireM.h instead of Wire.h 
+#if defined(__AVR_ATtiny25__) | defined(__AVR_ATtiny45__) | defined(__AVR_ATtiny85__) | defined(__AVR_AT90Tiny26__) | defined(__AVR_ATtiny26__)
+	#define FORCED_CLIMATE_ATTINY
+#endif
 
 #include <Arduino.h>
 
-#ifdef FORCED_CLIMATE_WIRE
-#include <Wire.h> 
-#else
+#ifdef FORCED_CLIMATE_ATTINY
 #include <TinyWireM.h>
+#else
+#include <Wire.h>
 #endif 
 
 class ForcedClimate {
 	private:
-		#ifndef FORCED_CLIMATE_WIRE
+		#ifdef FORCED_CLIMATE_ATTINY
 		USI_TWI & bus;
 		#else
 		TwoWire & bus;	
@@ -48,25 +50,32 @@ class ForcedClimate {
 		};
 
 	public:
-		#ifndef FORCED_CLIMATE_WIRE
-		ForcedClimate(USI_TWI & bus, const uint8_t address = 0x76, const bool autoBegin = false);
+		#ifdef FORCED_CLIMATE_ATTINY
+		ForcedClimate(USI_TWI & bus = TinyWireM, const uint8_t address = 0x76, const bool autoBegin = false);
 		#else
-		ForcedClimate(TwoWire & bus, const uint8_t address = 0x76, const bool autoBegin = false);	
+		ForcedClimate(TwoWire & bus = Wire, const uint8_t address = 0x76, const bool autoBegin = false);	
 		#endif
 
 		void begin();
 		void takeForcedMeasurement();
 
-		int32_t getIntTemperatureCelcius(const bool performMeasurement = false);
-		int32_t getIntTemperatureFahrenheit(const bool performMeasurement = false);
+		#ifdef FORCED_CLIMATE_ATTINY
+		int32_t getTemperatureCelcius(const bool performMeasurement = false);
+		#else
 		float getTemperatureCelcius(const bool performMeasurement = false);
-		float getTemperatureFahrenheit(const bool performMeasurement = false);
+		#endif
 
-		int32_t getIntPressure(const bool performMeasurement = false);
+		#ifdef FORCED_CLIMATE_ATTINY
+		int32_t getPressure(const bool performMeasurement = false);
+		#else
 		float getPressure(const bool performMeasurement = false);
+		#endif
 
-		int32_t getIntRelativeHumidity(const bool performMeasurement = false);
+		#ifdef FORCED_CLIMATE_ATTINY
+		int32_t getRelativeHumidity(const bool performMeasurement = false);
+		#else
 		float getRelativeHumidity(const bool performMeasurement = false);
+		#endif
 
 };
 

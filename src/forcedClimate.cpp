@@ -32,7 +32,7 @@ int32_t ForcedClimate::readFourRegisters () {
 /// \details
 /// This creates a ForcedClimate object from the mandatory TwoWire-bus
 /// and the address of the chip to communicate with.
-#ifndef FORCED_CLIMATE_WIRE
+#ifdef FORCED_CLIMATE_ATTINY
 ForcedClimate::ForcedClimate(USI_TWI & bus, const uint8_t address, const bool autoBegin):
 #else
 ForcedClimate::ForcedClimate(TwoWire & bus, const uint8_t address, const bool autoBegin):   
@@ -117,7 +117,12 @@ void ForcedClimate::readCalibrationData(){
 /// \details
 /// This function retrieves the compensated temperature as described
 /// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getIntTemperatureCelcius(const bool performMeasurement){
+#ifdef FORCED_CLIMATE_ATTINY
+int32_t ForcedClimate::getTemperatureCelcius(const bool performMeasurement)
+#else
+float ForcedClimate::getTemperatureCelcius(const bool performMeasurement)
+#endif
+{
     bus.beginTransmission(address);
     if(performMeasurement){
         bus.write((uint8_t)registers::CTRL_MEAS);
@@ -131,34 +136,12 @@ int32_t ForcedClimate::getIntTemperatureCelcius(const bool performMeasurement){
     int32_t var2 = ((((adc>>4) - ((int32_t)((uint16_t)temperature[1]))) * ((adc>>4) - ((int32_t)((uint16_t)temperature[1])))) >> 12);
     var2 = (var2 * ((int32_t)temperature[3])) >> 14;
     BME280t_fine = var1 + var2;
-    return (BME280t_fine*5+128)>>8;
-}
-
-/// \brief
-/// Get Temperature Celcius
-/// \details
-/// This function retrieves the compensated temperature as described
-/// on page 50 of the BME280 Datasheet.
-float ForcedClimate::getTemperatureCelcius(const bool performMeasurement){
-    return float(getIntTemperatureCelcius(performMeasurement) / 100);
-}
-
-/// \brief
-/// Get Temperature Fahrenheit
-/// \details
-/// This function retrieves the compensated temperature as described
-/// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getIntTemperatureFahrenheit(const bool performMeasurement){
-    return int32_t(float(getTemperatureCelcius() * 1.8) + 32);
-}
-
-/// \brief
-/// Get Temperature Fahrenheit
-/// \details
-/// This function retrieves the compensated temperature as described
-/// on page 50 of the BME280 Datasheet.
-float ForcedClimate::getTemperatureFahrenheit(const bool performMeasurement){
-    return float(float(float(getIntTemperatureCelcius() * 1.8) + 32) / 100);
+    int32_t temperature = (BME280t_fine*5+128)>>8;
+    #ifdef FORCED_CLIMATE_ATTINY
+    return temperature;
+    #else
+    return float(temperature / 100.0);
+    #endif
 }
 
 /// \brief
@@ -166,7 +149,12 @@ float ForcedClimate::getTemperatureFahrenheit(const bool performMeasurement){
 /// \details
 /// This function retrieves the compensated pressure as described
 /// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getIntPressure(const bool performMeasurement){
+#ifdef FORCED_CLIMATE_ATTINY
+int32_t ForcedClimate::getPressure(const bool performMeasurement)
+#else
+float ForcedClimate::getPressure(const bool performMeasurement)
+#endif
+{
     bus.beginTransmission(address);
     if(performMeasurement){
         bus.write((uint8_t)registers::CTRL_MEAS);
@@ -197,16 +185,11 @@ int32_t ForcedClimate::getIntPressure(const bool performMeasurement){
     var1 = (((int32_t)pressure[9]) * ((int32_t)(((p>>3) * (p>>3))>>13)))>>12;
     var2 = (((int32_t)(p>>2)) * ((int32_t)pressure[8]))>>13;
     p = (uint32_t)((int32_t)p + ((var1 + var2 + pressure[7]) >> 4));
+    #ifdef FORCED_CLIMATE_ATTINY
     return p;
-}
-
-/// \brief
-/// Get Pressure
-/// \details
-/// This function retrieves the compensated pressure as described
-/// on page 50 of the BME280 Datasheet.
-float ForcedClimate::getPressure(const bool performMeasurement){
-    return float(getIntPressure(performMeasurement) / 100);
+    #else
+    return float(p / 100.0);
+    #endif
 }
 
 /// \brief
@@ -214,7 +197,12 @@ float ForcedClimate::getPressure(const bool performMeasurement){
 /// \details
 /// This function retrieves the compensated humidity as described
 /// on page 50 of the BME280 Datasheet.
-int32_t ForcedClimate::getIntRelativeHumidity(const bool performMeasurement){
+#ifdef FORCED_CLIMATE_ATTINY
+int32_t ForcedClimate::getRelativeHumidity(const bool performMeasurement)
+#else
+float ForcedClimate::getRelativeHumidity(const bool performMeasurement)
+#endif
+{
     bus.beginTransmission(address);
     if(performMeasurement){
         bus.write((uint8_t)registers::CTRL_MEAS);
@@ -234,14 +222,10 @@ int32_t ForcedClimate::getIntRelativeHumidity(const bool performMeasurement){
     var1 = (var1 - (((((var1 >> 15) * (var1 >> 15)) >> 7) * ((int32_t)humidity[1])) >> 4));
     var1 = (var1 < 0 ? 0 : var1);
     var1 = (var1 > 419430400 ? 419430400 : var1);
-    return (uint32_t)((var1>>12)*25)>>8;
-}
-
-/// \brief
-/// Get Humidity
-/// \details
-/// This function retrieves the compensated humidity as described
-/// on page 50 of the BME280 Datasheet.
-float ForcedClimate::getRelativeHumidity(const bool performMeasurement){
-    return float(getIntRelativeHumidity(performMeasurement) / 100);
+    int32_t humidity = (uint32_t)((var1>>12)*25)>>8;
+    #ifdef FORCED_CLIMATE_ATTINY
+    return humidity;
+    #else
+    return float(humidity / 100.0);
+    #endif
 }

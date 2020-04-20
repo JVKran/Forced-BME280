@@ -16,12 +16,14 @@ There has been given an example that can be obtained from below or from within t
 ```c++
 #include <forcedClimate.hpp>
 
-// Pass a Wire object for I2C communication and the address of the BME280.
-ForcedClimate climateSensor = ForcedClimate(Wire, 0x76);
+// Create an instance of a BME280. The parameters I2C bus and I2C address are optional. For example:
+// - ForcedClimate climateSensor = ForcedClimate(Wire, 0x76);
+// - ForcedClimate climateSensor = ForcedClimate(TinyWireM, 0x77);
+ForcedClimate climateSensor = ForcedClimate();
 
 void setup(){
 	Serial.begin(9600);
-	Wire.begin();
+	Wire.begin(); 				// Or "TinyWireM.begin()" when using an ATtiny.
 	climateSensor.begin();
 }
 
@@ -35,10 +37,15 @@ void loop(){
 	Serial.print(climateSensor.getPressure());
 	Serial.println();
 	delay(1000);
+	// Perform measurement integrated getTemperature(); useful for when only one value has to be used.
+	Serial.print(climateSensor.getTemperatureCelcius(true));
+	Serial.println();
+	delay(5000);
 }
 ```
 
-> When using this library with an ATtiny, one has to comment the macro in */Documents/Arduino/Libraries/Forced-BME280/src/forcedClimate.h*. This has to be done to make this library both convenient and memory friendly.
+> This library automatically determines wether to use TinyWireM or Wire. The only thing the user has to take care of, is to make sure begin() is called
+on the appropriate instance in the _setup()_; _TinyWireM.begin()_ or _Wire.begin_.
 
 ## Functions
 #### takeForcedMeasurement() 
