@@ -52,8 +52,6 @@ on the appropriate instance in the _setup()_; _TinyWireM.begin()_ or _Wire.begin
 This function takes a forced measurement which means getTemperatureCelcius(), getRelativeHumidity() and getPressure() use the updated values. Useful in case all functions are all called at the same time.
 #### getTemperatureCelcius(const bool performMeasurement) 
 This function can be used to retrieve the temperature. The parameter defaults to false which means takeForcedMeasurement() should be called first to make sure updated values are used. If the passed parameter is equal to true, a forced measurement is taken; useful in case only the getTemperatureCelcius() function is called.
-#### getTemperatureFahrenheit(const bool performMeasurement)
-This function calls getTemperatureCelcius() but performs some calculations afterward to return the temperature in fahrenheit.
 #### getRelativeHumidity(const bool performMeasurement) 
 This function can be used to retrieve the humidity. The parameter defaults to false which means takeForcedMeasurement() should be called first to make sure updated values are used. If the passed parameter is equal to true, a forced measurement is taken; useful in case only the getRelativeHumidity() function is called.
 #### getPressure(const bool performMeasurement) 
