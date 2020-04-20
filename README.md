@@ -8,7 +8,7 @@ The name of this respository stands for the mode in which the BME280 is used. In
 - Ultra low power. In sleep mode the BME280 only uses 0.25uA!
 - Ultra small footprint; this library was made with efficiency and memory usage in mind.
 - Easy to use interface and functions. Despite the small size of this library, functions are still very intuitive.
-- Change between using Wire and TinyWire at the touch of one single macro.
+- Automatically change between using Wire and TinyWire.
 
 
 ## Example
