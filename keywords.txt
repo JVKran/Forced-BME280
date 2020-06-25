@@ -2,6 +2,6 @@
 
 begin					KEYWORD2
 takeForcedMeasurement	KEYWORD2
-getTemperature			KEYWORD2
-getHumidity				KEYWORD2
+getTemperatureCelcius	KEYWORD2
+getRelativeHumidity		KEYWORD2
 getPressure				KEYWORD2
