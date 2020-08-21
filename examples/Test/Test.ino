@@ -12,11 +12,6 @@ ForcedClimate climateSensor = ForcedClimate();
 
 void setup(){
 	Serial.begin(9600);
-	#if defined(__AVR_ATtiny25__) | defined(__AVR_ATtiny45__) | defined(__AVR_ATtiny85__) | defined(__AVR_AT90Tiny26__) | defined(__AVR_ATtiny26__)
-	TinyWireM.begin();
-	#else
-	Wire.begin();
-	#endif
 	climateSensor.begin();
 }
 

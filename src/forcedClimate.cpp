@@ -55,6 +55,7 @@ ForcedClimate::ForcedClimate(TwoWire & bus, const uint8_t address, const bool au
 /// data from the register. This function has been implementted to comply
 /// with the Arduino 1.5 Format; it's also called from the constructor (as it should be).
 void ForcedClimate::begin(){
+    bus.begin();
     applyOversamplingControls();
     readCalibrationData();
 }
@@ -150,7 +151,7 @@ float ForcedClimate::getTemperatureCelcius(const bool performMeasurement)
 /// This function retrieves the compensated pressure as described
 /// on page 50 of the BME280 Datasheet.
 #ifdef FORCED_CLIMATE_ATTINY
-int32_t ForcedClimate::getPressure(const bool performMeasurement)
+uint32_t ForcedClimate::getPressure(const bool performMeasurement)
 #else
 float ForcedClimate::getPressure(const bool performMeasurement)
 #endif
@@ -198,7 +199,7 @@ float ForcedClimate::getPressure(const bool performMeasurement)
 /// This function retrieves the compensated humidity as described
 /// on page 50 of the BME280 Datasheet.
 #ifdef FORCED_CLIMATE_ATTINY
-int32_t ForcedClimate::getRelativeHumidity(const bool performMeasurement)
+uint32_t ForcedClimate::getRelativeHumidity(const bool performMeasurement)
 #else
 float ForcedClimate::getRelativeHumidity(const bool performMeasurement)
 #endif
@@ -222,7 +223,7 @@ float ForcedClimate::getRelativeHumidity(const bool performMeasurement)
     var1 = (var1 - (((((var1 >> 15) * (var1 >> 15)) >> 7) * ((int32_t)humidity[1])) >> 4));
     var1 = (var1 < 0 ? 0 : var1);
     var1 = (var1 > 419430400 ? 419430400 : var1);
-    int32_t humidity = (uint32_t)((var1>>12)*25)>>8;
+    uint32_t humidity = (uint32_t)((var1>>12)*25)>>8;
     #ifdef FORCED_CLIMATE_ATTINY
     return humidity;
     #else

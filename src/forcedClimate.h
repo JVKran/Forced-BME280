@@ -66,13 +66,13 @@ class ForcedClimate {
 		#endif
 
 		#ifdef FORCED_CLIMATE_ATTINY
-		int32_t getPressure(const bool performMeasurement = false);
+		uint32_t getPressure(const bool performMeasurement = false);
 		#else
 		float getPressure(const bool performMeasurement = false);
 		#endif
 
 		#ifdef FORCED_CLIMATE_ATTINY
-		int32_t getRelativeHumidity(const bool performMeasurement = false);
+		uint32_t getRelativeHumidity(const bool performMeasurement = false);
 		#else
 		float getRelativeHumidity(const bool performMeasurement = false);
 		#endif
