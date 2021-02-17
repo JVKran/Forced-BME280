@@ -14,7 +14,7 @@ The name of this respository stands for the mode in which the BME280 is used. In
 ## Example
 There has been given an example that can be obtained from below or from within the Arduino IDE in Examples->Forced-BME280->Test.
 ```c++
-#include <forcedClimate.hpp>
+#include <forcedClimate.h>
 
 // Create an instance of a BME280. The parameters I2C bus and I2C address are optional. For example:
 // - ForcedClimate climateSensor = ForcedClimate(Wire, 0x76);
